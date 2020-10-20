@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    environment:
+      - PORT=9001
+      - MQTT_SERVER=mqtt://mqtt.eclipse.org
+      - MQTT_PORT=1883
+      - MQTT_TOPIC=some_topic_test
+    volumes:
+      - ./:/dist
+    ports:
+      - 1338:9001
+
+  ui:
+    container_name: ui
+    environment:
+      - BACKEND_URL=localhost:1338
+    depends_on:
+      - backend
+    build:
+      context: ./ui/
+      dockerfile: Dockerfile
+    ports:
+      - 8000:80
